@@ -12,7 +12,8 @@ const { signup, login } = require('./handlers/users');
 
 const { db } = require('./util/admin');
 
-//Post routes
+//Dialogflow fulfillment route 
+
 app.post('/dialogflowFulfillment', (req, res) => {
     const { WebhookClient } = require('dialogflow-fulfillment');
     const agent = new WebhookClient({ request: req, response: res });
@@ -40,6 +41,9 @@ app.post('/dialogflowFulfillment', (req, res) => {
     intentMap.set('WriteToDatabase', writeToDb);
     agent.handleRequest(intentMap);
 })
+
+//Post routes
+
 app.get('/posts', getAllPosts);
 
 app.post('/post', FBAuth, postOnePost);

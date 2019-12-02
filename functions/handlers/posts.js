@@ -3,7 +3,7 @@ const { db } = require('../util/admin');
 exports.getAllPosts = (req, res) => {
     db
         .collection("posts")
-        .orderBy('createAt', 'desc')
+        .orderBy('createdAt', 'desc')
         .get()
         .then(function (querySnapshot) {
             let posts = [];
