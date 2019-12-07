@@ -12,36 +12,6 @@ const { signup, login } = require('./handlers/users');
 
 const { db } = require('./util/admin');
 
-//Dialogflow fulfillment route 
-
-app.post('/dialogflowFulfillment', (req, res) => {
-    const { WebhookClient } = require('dialogflow-fulfillment');
-    const agent = new WebhookClient({ request: req, response: res });
-
-    function writeToDb(agent) {
-        const databaseEntry = agent.parameters.databaseEntry;
-
-        let newPost = {
-            userHandle: 'User',
-            createdAt: new Date().toISOString(),
-            body: databaseEntry
-        };
-
-        return db.collection("posts").add(newPost)
-            .then(doc => {
-                agent.add(`Wrote "${databaseEntry}" to the databse`);
-                console.log(`document ${doc.id} created successfuly`);
-            })
-            .catch(err => {
-                res.status(500).json({ error: 'something went wrong' });
-                console.error(err);
-            });
-    }
-    let intentMap = new Map();
-    intentMap.set('WriteToDatabase', writeToDb);
-    agent.handleRequest(intentMap);
-})
-
 //Post routes
 
 app.get('/posts', getAllPosts);
