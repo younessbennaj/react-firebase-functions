@@ -12,7 +12,7 @@ exports.getAllPosts = (req, res) => {
                     postId: doc.id,
                     ...doc.data()
                 });
-                console.log(doc.id, " => ", doc.data());
+                // console.log(doc.id, " => ", doc.data());
             });
             return res.json(posts);
         })

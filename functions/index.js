@@ -8,7 +8,7 @@ const app = express();
 const { FBAuth } = require('./util/fbAuth');
 
 const { getAllPosts, postOnePost } = require('./handlers/posts');
-const { signup, login } = require('./handlers/users');
+const { signup, login, uploadImage } = require('./handlers/users');
 
 const { db } = require('./util/admin');
 
@@ -23,6 +23,8 @@ app.post('/post', FBAuth, postOnePost);
 app.post('/signup', signup);
 
 app.post('/login', login);
+
+app.post('/user/image', FBAuth, uploadImage);
 
 exports.api = functions.region('europe-west1').https.onRequest(app);
 
