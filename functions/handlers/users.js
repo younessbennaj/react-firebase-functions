@@ -15,7 +15,8 @@ exports.signup = (req, res) => {
         email: req.body.email,
         password: req.body.password,
         confirmPassword: req.body.confirmPassword,
-        handle: req.body.handle
+        firstName: req.body.firstName,
+        lastName: req.body.lastName
     };
 
     const { valid, errors } = validateSignupData(newUser);
@@ -25,11 +26,11 @@ exports.signup = (req, res) => {
     const noImg = 'no-img.png';
 
     let token, userId;
-    db.doc(`/users/${newUser.handle}`)
+    db.doc(`/users/${newUser.firstName}_${newUser.lastName}`)
         .get()
         .then((doc) => {
             if (doc.exists) {
-                return res.status(400).json({ handle: 'this handle is already taken' });
+                return res.status(400).json({ name: 'this name is already taken' });
             } else {
                 return firebase
                     .auth()
@@ -43,7 +44,8 @@ exports.signup = (req, res) => {
         .then((idToken) => {
             token = idToken;
             const userCredentials = {
-                handle: newUser.handle,
+                firstName: newUser.firstName,
+                lastName: newUser.lastName,
                 email: newUser.email,
                 createdAt: new Date().toISOString(),
                 imageUrl: `https://firebasestorage.googleapis.com/v0/b/${
@@ -51,7 +53,7 @@ exports.signup = (req, res) => {
                     }/o/${noImg}?alt=media`,
                 userId
             };
-            return db.doc(`/users/${newUser.handle}`).set(userCredentials);
+            return db.doc(`/users/${newUser.firstName}_${newUser.lastName}`).set(userCredentials);
         })
         .then(() => {
             return res.status(201).json({ token });
