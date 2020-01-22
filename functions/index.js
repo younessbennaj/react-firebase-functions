@@ -9,7 +9,7 @@ const app = express();
 
 const { FBAuth } = require('./util/fbAuth');
 
-const { getAllPosts, postOnePost, getPost, commentOnPost } = require('./handlers/posts');
+const { getAllPosts, postOnePost, getPost, commentOnPost, likeOnPost, unlikeOnPost } = require('./handlers/posts');
 const { signup, login, uploadImage, addUserDetails, getAuthenticatedUser } = require('./handlers/users');
 
 const { db } = require('./util/admin');
@@ -17,14 +17,6 @@ const { db } = require('./util/admin');
 //enable cross-origin resource sharing
 
 app.use(cors());
-
-// app.use(function (req, res, next) {
-//     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
-//     res.header("Access-Control-Allow-Origin", "*");
-//     res.header("Access-Control-Allow-Headers", "Access-Control-Allow-Headers")
-//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-//     next();
-// });
 
 //Post routes
 
@@ -35,6 +27,10 @@ app.post('/post', FBAuth, postOnePost);
 app.get('/post/:postId', getPost);
 
 app.post('/post/:postId/comment', FBAuth, commentOnPost);
+
+app.post('/post/:postId/like', FBAuth, likeOnPost);
+
+app.post('/post/:postId/unlike', FBAuth, unlikeOnPost);
 /*
 TODO: 
 
