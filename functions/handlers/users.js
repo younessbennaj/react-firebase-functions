@@ -73,7 +73,6 @@ exports.signup = (req, res) => {
 exports.login = (req, res) => {
     const user = {
         email: req.body.email,
-        // handle: req.body.handle,
         password: req.body.password
     }
 
@@ -104,7 +103,7 @@ exports.login = (req, res) => {
 exports.addUserDetails = (req, res) => {
     let userDetails = reduceUserDetails(req.body);
 
-    db.doc(`/users/${req.user.handle}`)
+    db.doc(`/users/${req.user.firstName}_${req.user.lastName}`)
         .update(userDetails)
         .then(() => {
             return res.json({ message: 'Details added successfully' });
@@ -117,14 +116,16 @@ exports.addUserDetails = (req, res) => {
 
 exports.getAuthenticatedUser = (req, res) => {
     let userData = {};
-    db.doc(`/users/${req.user.handle}`)
+    db.doc(`/users/${req.user.firstName}_${req.user.lastName}`)
         .get()
         .then((doc) => {
+
             if (doc.exists) {
                 userData.credentials = doc.data();
+                console.log(userData);
                 return db
                     .collection('likes')
-                    .where('userHandle', '==', req.user.handle)
+                    .where('userFirstName', '==', req.user.firstName)
                     .get();
             }
         })
@@ -205,7 +206,7 @@ exports.uploadImage = (req, res) => {
                     }/o/${imageFileName}?alt=media`;
                 console.log('_______');
                 console.log(imageUrl);
-                return db.doc(`/users/${req.user.handle}`).update({ imageUrl });
+                return db.doc(`/users/${req.user.firstName}_${req.user.lastName}`).update({ imageUrl });
             })
             .then(() => {
                 return res.json({ message: 'image uploaded successfully' });
