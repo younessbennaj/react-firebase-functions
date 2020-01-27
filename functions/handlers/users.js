@@ -126,6 +126,7 @@ exports.getAuthenticatedUser = (req, res) => {
                 return db
                     .collection('likes')
                     .where('userFirstName', '==', req.user.firstName)
+                    .where('userLastName', '==', req.user.lastName)
                     .get();
             }
         })
